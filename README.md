@@ -12,14 +12,14 @@
 
 ### Создание нового сайта 
 
-Сначала потребуетс создать новый сайт. Для этого нужно запустить
+Сначала потребуется создать новый сайт. Для этого нужно запустить
 
 ```
-make new
+make SITE=<имя сайта> new
 ```
 или
 ```
-docker run -it --rm -v $(pwd):/srv/pelican mjjacko/pelican pelican-quickstart -p my-site
+docker run -it --rm -v $(pwd):/srv/pelican mjjacko/pelican pelican-quickstart -p <имя сайта>
 ```
 
 Это создаст в текущей директории `$(pwd)` новую поддиректорию и наполнит её согласно ответам на вопросы скрипта. 
@@ -31,7 +31,7 @@ docker run -it --rm -v $(pwd):/srv/pelican mjjacko/pelican pelican-quickstart -p
 1. Интерактивно - вывод будет поступать в консоль
 
   ```
-  make site=my-site start-interactive
+  make SITE=my-site start-interactive
   ```
   
   В качестве переменной site нужно указать тот сайт, который вы уже создали и который требуется опубликовать.
@@ -46,7 +46,7 @@ docker run -it --rm -v $(pwd):/srv/pelican mjjacko/pelican pelican-quickstart -p
 2. Запустить в качестве демона, вывод будет поступать в лог Docker:
 
   ```
-  make site=my-site start-daemon
+  make SITE=my-site start-daemon
   ```
   
   В качестве переменной site нужно указать тот сайт, который вы уже создали и который требуется опубликовать.
