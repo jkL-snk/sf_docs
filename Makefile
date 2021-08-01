@@ -1,5 +1,5 @@
 new:
-	docker run -it --rm -v $(pwd):/srv/pelican mjjacko/pelican pelican-quickstart -p my-site
+	docker run -it --rm -v $(pwd):/srv/pelican mjjacko/pelican pelican-quickstart -p $(SITE)
 
 start-interactive:
 	cd $(SITE)
@@ -14,3 +14,4 @@ stop:
 
 logs:
 	docker logs -f pelican-dev
+
