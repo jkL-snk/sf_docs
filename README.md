@@ -1,61 +1,84 @@
-# Pelican Dockerfile
+# Pelican через Docker
 
-A base docker setup that inherits Python 2 and loads a bunch of deps. It runs Pelican in autoload mode for dev.
+## Функционал
 
-This is an easy to use image to setup a Pelican static website.
-This image will run the Pelican devserver, which means it will watch for changes in the content and theme files.
+Этот репозиторий позволяет с помощью Docker запустить локально сервис Pelican. Этот сервис позволяет опубликовать локальный каталог с Markdown-файлами в виде веб-сайта с возможностями навигации, поиска по тэгам, тематикам и авторам. [Подробнее о Pelican](https://docs.getpelican.com/)
 
-Also a volume has been added so you can simply map to an existing Pelican directory and the container will update the output.
+## Требования
 
-Some sane requirements have been pre-built into the image.
+Для использования потребуются Git, Docker и Make.
 
-## Using on a MAC
+## Основные сценарии использования
 
-### Creating a new site 
+### Создание нового сайта 
 
-To create a new direcotry to be used as a site: 
+Сначала потребуетс создать новый сайт. Для этого нужно запустить
 
+```
+make new
+```
+или
 ```
 docker run -it --rm -v $(pwd):/srv/pelican mjjacko/pelican pelican-quickstart -p my-site
 ```
 
-This will create a subdirecotry from the local directory `$(pwd)` and provision it based on how you answered the questions. 
+Это создаст в текущей директории `$(pwd)` новую поддиректорию и наполнит её согласно ответам на вопросы скрипта. 
 
-### Running as a development server
+### Запуск сервиса
 
-There are two ways to run this. We are using `--name` option to make things easier later :
+Сервис можно запустить двумя способами, интерактивно и в качестве демона:
 
-1. As a always running container - so the output will stream to the screen
+1. Интерактивно - вывод будет поступать в консоль
 
   ```
-  cd my-site    # Go to the directory. Youshould also start another console or editor. 
+  make site=my-site start-interactive
+  ```
+  
+  В качестве переменной site нужно указать тот сайт, который вы уже создали и который требуется опубликовать.
+  
+  Также можно сделать то же самое без Make:
+
+  ```
+  cd my-site 
   docker run --rm -v $(pwd):/srv/pelican --name pelican-dev -p 8000:8000  mjjacko/pelican
   ```
 
-2. as a daeamon, using docker to push it to the background.
+2. Запустить в качестве демона, вывод будет поступать в лог Docker:
 
+  ```
+  make site=my-site start-daemon
+  ```
+  
+  В качестве переменной site нужно указать тот сайт, который вы уже создали и который требуется опубликовать.
+  
+  Также можно сделать то же самое без Make:
+  
   ```
   cd my-site
   docker run --rm -v $(pwd):/srv/pelican -d --name pelican-dev -p 8000:8000  mjjacko/pelican
   ```
 
-In both cases It takes 2-3 minutes for the first time. The web server will run locally on port 8000. 
+Запуск может занять несколько минут. Сервер будет отвечать на порту 8000.
 
-### Viewing logs 
+### Просмотр логовЖ
 
-The logs are viewable as output whne running directly, and when the container runs as a background task (the -d) 
-you can view the logs using :
+Логи можно смотреть или интерактивно, или при запуске в качестве демона командой
 
+```
+make logs
+```
+или
 ```
 docker logs -f pelican-dev
 ```
+## Остановка контейнера
 
-In both cases, any changes to the files will cause the output to be regenreated.
+Контейнер можно остановить командой
 
-## Stopping the container
-
-To stop the container, since we named it, you can stop it with 
-
+```
+make stop
+```
+или
 ```
 docker stop pelican-dev
 ```
